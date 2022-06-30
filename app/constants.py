@@ -83,7 +83,7 @@ cn = {
     
     
     #TODO: add constants for default crosshair values for each weapon
-    #TODO: add suport for jungle inferno weapon scripts
+    
     
     
     
