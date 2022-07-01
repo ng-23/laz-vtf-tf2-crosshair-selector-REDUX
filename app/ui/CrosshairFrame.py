@@ -426,13 +426,60 @@ class CrosshairFrame(wx.Frame):
                 self.logs_add("Skipped {} (was already {})".format(
                     entry["name"], old_xhair))
             else:
-                entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["file"] = "/".join(fname.split("/")[:-1]) + "/" + cur_xhair
-                entry["xhair"] = cur_xhair
+                if cur_xhair != "crosshairs":
+                    entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["file"] = "vgui/replay/thumbnails/%s" % (cur_xhair)
+                    entry["xhair"] = cur_xhair
+                    entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["x"] = "0"
+                    entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["y"] = "0"
+                    entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["width"] = "64"
+                    entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["height"] = "64"
 
+                else:
+                    entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["file"] = "sprites/crosshairs"
+                    entry["xhair"] = cur_xhair
+                    weapon_script_file = entry["name"]
+                    # name of script is important because different scripts have different default values
+                    # find default values of script below (hardcoded in constants)
+                    if weapon_script_file in cn["default_crosshair_data"]["_32_32_32_32"]:
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["x"] = "32"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["y"] = "32"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["width"] = "32"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["height"] = "32"
+                        
+                    elif weapon_script_file in cn["default_crosshair_data"]["_64_64_64_64"]:
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["x"] = "64"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["y"] = "64"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["width"] = "64"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["height"] = "64"
+                        
+                    elif weapon_script_file in cn["default_crosshair_data"]["_0_0_32_32"]:
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["x"] = "0"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["y"] = "0"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["width"] = "32"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["height"] = "32"
+                        
+                    elif weapon_script_file in cn["default_crosshair_data"]["_64_0_32_32"]:
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["x"] = "64"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["y"] = "0"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["width"] = "32"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["height"] = "32"
+                        
+                    elif weapon_script_file in cn["default_crosshair_data"]["_0_64_32_32"]:
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["x"] = "0"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["y"] = "64"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["width"] = "32"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["height"] = "32"
+                        
+                    elif weapon_script_file in cn["default_crosshair_data"]["_0_48_24_24"]:
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["x"] = "0"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["y"] = "48"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["width"] = "24"
+                        entry["cfg"]["WeaponData"]["TextureData"]["\"crosshair\""]["height"] = "24"
+                        
                 out = reconstruct_cfg(entry["cfg"])
                 write_cfg(entry["path"], out)
                 self.logs_add("{} changed from {} to {}".format(entry["name"], old_xhair, cur_xhair))
-
+                
         if cn["options"]["backup_scripts"]:
             self.backup_scripts()
 
