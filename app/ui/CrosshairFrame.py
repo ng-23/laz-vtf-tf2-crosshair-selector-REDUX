@@ -227,54 +227,60 @@ class CrosshairFrame(wx.Frame):
             choice = self.xhair_choice.GetStringSelection() # name of the crosshair, converted to string
             xhair_display_path = get_xhair_display_path(choice) # full path to the crosshair file in the assets folder
             
-            # display_path != xhair_path
-            # xhair_path is the path to the folder with all VTFs
-            # display_path points to display folder
-            if xhair_display_path is None:
-                vtf_file = get_xhairs_path() + "/%s.vtf" % (choice)
-                vtf_header_bytes_hex = open(vtf_file,'rb').read(80)
+            if choice != "crosshairs": # if user isn't trying to choose the default crosshair
+            
+                # display_path != xhair_path
+                # xhair_path is the path to the folder with all VTFs
+                # display_path points to display folder
+                if xhair_display_path is None:
+                    vtf_file = get_xhairs_path() + "/%s.vtf" % (choice)
+                    vtf_header_bytes_hex = open(vtf_file,'rb').read(80)
                 
-                if vtf_convert.validate_vtf_header(vtf_header_bytes_hex):
-                    vtf_png = vtf_convert.vtf2png(vtf_file)
+                    if vtf_convert.validate_vtf_header(vtf_header_bytes_hex):
+                        vtf_png = vtf_convert.vtf2png(vtf_file)
                     
-                    if vtf_png == None:
-                        self.logs_add("Could not convert %s.vtf to PNG. Please ensure VTF high-res image format is RGBA32, BGRA32, ABRG32, or DXT5." % (choice))
-                        self.set_image("")
+                        if vtf_png == None:
+                            self.logs_add("Could not convert %s.vtf to PNG. Please ensure VTF high-res image format is RGBA32, BGRA32, ABRG32, or DXT5." % (choice))
+                            self.set_image("")
+                        
+                        else:
+                            self.logs_add("Successfully converted %s.vtf to PNG!" % (choice))
+                            #assuming user only has 2 ways to run program: Either .py script or .exe file
+                            #can use either display path from .exe or .py (which is a subfolder of assets)
+                            #since user is more likely to be using .exe, try saving to there first
+                            #otherwise, save to py_script_pngs_filepath
+                            #since .exe display path is created regardlesss, may just be better to save there no matter what
+                            exe_pngs_filepath = format_path_by_os(cn["constants"]["data_dir"] + "display")
+                            # py_script_pngs_filepath = format_path_by_os(os.getcwd() + "/assets/display")
+                        
+                            if os.path.isdir(exe_pngs_filepath):
+                                self.logs_add("Temporarily saving %s.png to %s" % (choice,exe_pngs_filepath))
+                                vtf_png.save(exe_pngs_filepath + "/%s.png" % (choice))
+                            else:
+                                self.logs_add("Couldn't find %s. Recreating..." % (exe_pngs_filepath))
+                                initialize_local_storage()
+                                self.logs_add("Temporarily saving %s.png to %s" % (choice,exe_pngs_filepath))
+                                vtf_png.save(exe_pngs_filepath + "/%s.png" % (choice))
+                            
+                            # if os.path.isdir(py_script_pngs_filepath):                                 
+                                # self.logs_add("Temporarily saving %s.png to %s" % (choice,py_script_pngs_filepath))
+                                # vtf_png.save(py_script_pngs_filepath + "/%s.png" % (choice))
+                            
+                            self.set_image(get_xhair_display_path(choice))
                         
                     else:
-                        self.logs_add("Successfully converted %s.vtf to PNG!" % (choice))
-                        #assuming user only has 2 ways to run program: Either .py script or .exe file
-                        #can use either display path from .exe or .py (which is a subfolder of assets)
-                        #since user is more likely to be using .exe, try saving to there first
-                        #otherwise, save to py_script_pngs_filepath
-                        #since .exe display path is created regardlesss, may just be better to save there no matter what
-                        exe_pngs_filepath = format_path_by_os(cn["constants"]["data_dir"] + "display")
-                        # py_script_pngs_filepath = format_path_by_os(os.getcwd() + "/assets/display")
-                        
-                        if os.path.isdir(exe_pngs_filepath):
-                            self.logs_add("Temporarily saving %s.png to %s" % (choice,exe_pngs_filepath))
-                            vtf_png.save(exe_pngs_filepath + "/%s.png" % (choice))
-                        else:
-                            self.logs_add("Couldn't find %s. Recreating..." % (exe_pngs_filepath))
-                            initialize_local_storage()
-                            self.logs_add("Temporarily saving %s.png to %s" % (choice,exe_pngs_filepath))
-                            vtf_png.save(exe_pngs_filepath + "/%s.png" % (choice))
-                            
-                        # if os.path.isdir(py_script_pngs_filepath):                                 
-                            # self.logs_add("Temporarily saving %s.png to %s" % (choice,py_script_pngs_filepath))
-                            # vtf_png.save(py_script_pngs_filepath + "/%s.png" % (choice))
-                            
-                        self.set_image(get_xhair_display_path(choice))
-                        
+                        self.logs_add("Could not convert %s.vtf to PNG. Please ensure file header is untampered." % (choice))
+                        self.set_image("")
+                    
                 else:
-                    self.logs_add("Could not convert %s.vtf to PNG. Please ensure file header is untampered." % (choice))
-                    self.set_image("")
+                    # this is if crosshair already exists as a PNG in assets folder
+                    # should user delete a PNG from display folder, the first if condition will replace it
+                    self.logs_add("Reading %s.png from %s" % (choice,format_path_by_os(xhair_display_path)))
+                    self.set_image(xhair_display_path)
                     
             else:
-                # this is if crosshair already exists as a PNG in assets folder
-                # should user delete a PNG from display folder, the first if condition will replace it
-                self.logs_add("Reading %s.png from %s" % (choice,format_path_by_os(xhair_display_path)))
-                self.set_image(xhair_display_path)
+                self.logs_add("Notice: 'crosshairs' option is the game's default crosshair for a weapon. There should not be a VTF of the same name.")
+                self.set_image("")
 
         self.xhair_choice.Bind(wx.EVT_CHOICE, xhair_chosen)
         self.btn_apply.Bind(wx.EVT_BUTTON, self.btn_apply_clicked)
