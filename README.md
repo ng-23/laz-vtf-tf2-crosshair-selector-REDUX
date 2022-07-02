@@ -1,8 +1,9 @@
-# tf2-vtf-crosshair-selector
+# laz-tf2-vtf-crosshair-selector-REDUX
+Massive credit to [laz](https://github.com/mxm07) for laying the foundation of this project (UI, reading/writing weapon scripts, generating sample configs, etc.), the original source code is [here](https://bitbucket.org/mxm07/tf2-vtf-crosshair-selector/src/master/).
 
 # Installation
 
-Download the latest .exe and run it.
+Download the latest .exe from releases and run it.
 
 # Build
 If you want to build the code yourself, make sure you have Python 3.7 and pip3 installed. Due to PyInstaller being dumb, the build process is a bit convoluted. I may automate this in the future.
@@ -17,7 +18,7 @@ Next, type
 pyi-makespec --onefile --windowed --icon=xhair.ico crosshair.py
 ```
 
-This will generate a file in the same folder called `crosshair.spec`. You'll have to edit this slightly for the build to work. Open `crosshair.spec` with your favorite text editor and go to the line that looks like `datas=[]` (should be line 9). Replace this with:
+This will generate a file in the same folder called `crosshair.spec`. You'll have to edit this slightly for the build to work. Open `crosshair.spec` with your favorite text editor and go to the line that looks like `datas=[]`. Replace this with:
 ```
 datas=[
     ('assets', './assets'),
@@ -25,7 +26,7 @@ datas=[
 ],
 ```
 
-So your file should look something like
+So your file should look something like this:
 ```
 ...
 a = Analysis(['crosshair.py'],
@@ -39,9 +40,9 @@ a = Analysis(['crosshair.py'],
              hookspath=[],
 ...
 ```
-Then, to generate an .exe output, type
+Then, to generate a .exe output, type this:
 ```
 pyinstaller crosshair.spec
 ```
 
-If everything went correctly, you should see a crosshair.exe in a newly-created dist folder in that directory.
+If everything went correctly, you should see a crosshair.exe in a newly-created 'dist' folder in that directory.
