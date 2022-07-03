@@ -6,7 +6,7 @@ Massive credit to [laz](https://github.com/mxm07) for laying the foundation of t
 Download the latest .exe from releases and run it.
 
 # Build
-If you want to build the code yourself, make sure you have Python 3.7 and pip3 installed. Due to PyInstaller being dumb, the build process is a bit convoluted. I may automate this in the future.
+If you want to build the code yourself, make sure you have Python 3.8+ and pip3 installed. Due to PyInstaller being dumb, the build process is a bit convoluted. I may automate this in the future.
 
 Clone the repo, cd into it, and type 
 ```
