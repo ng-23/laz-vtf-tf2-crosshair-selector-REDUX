@@ -1,5 +1,5 @@
 # laz-tf2-vtf-crosshair-selector-REDUX
-Massive credit to [laz](https://github.com/mxm07) for laying the foundation of this project (UI, reading/writing weapon scripts, generating sample configs, etc.), the original source code is [here](https://bitbucket.org/mxm07/tf2-vtf-crosshair-selector/src/master/).
+Massive credit to [laz](https://github.com/mxm07) for laying the foundation of this project (UI, reading/writing weapon scripts, generating sample configs, etc.), the original source code is [here](https://bitbucket.org/mxm07/tf2-vtf-crosshair-selector/src/master/). Huge thanks also to Andi and Squink of the [Source Engine Discord](https://discord.com/invite/sourceengine) for helping me understand mipmaps - this wouldn't be possible without them!
 
 # Installation
 
